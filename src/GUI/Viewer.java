@@ -51,6 +51,7 @@ public class Viewer extends Application {
 
         Scene mainScene = new Scene(root);
         primaryStage.setScene(mainScene);
+        primaryStage.setMaximized(true);
         primaryStage.show();
 
     }
