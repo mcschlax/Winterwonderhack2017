@@ -8,6 +8,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -31,8 +32,17 @@ public class Viewer extends Application {
         BorderPane root = new BorderPane();
 
         Menu menu = new Menu("File");
+        MenuItem newFlame = new MenuItem("New");
+        MenuItem loadFlame = new MenuItem("Load Existing");
+        MenuItem saveFlame = new MenuItem("Save");
+        MenuItem export = new MenuItem("Export to image");
+        menu.getItems().addAll(newFlame, loadFlame, saveFlame, export);
+
         Menu view = new Menu("View");
+
         Menu upload = new Menu("Upload");
+        MenuItem uploadAWS = new MenuItem("Upload to AWS");
+        upload.getItems().addAll(uploadAWS);
 
         Menu about = new Menu("About");
         MenuItem aboutItem = new MenuItem("About");
@@ -46,7 +56,7 @@ public class Viewer extends Application {
         menubar.getMenus().addAll(menu, view, upload, about);
 
         root.setTop(menubar);
-        SplitPane mod = ModPane.get(primaryStage);
+        SplitPane mod = ModPane.get(primaryStage, new ImageView()); //Temporary blank for testing
         root.setCenter(mod);
 
         Scene mainScene = new Scene(root);
