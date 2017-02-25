@@ -7,9 +7,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitPane;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Popup;
@@ -42,6 +46,8 @@ public class Viewer extends Application {
         menubar.getMenus().addAll(menu, view, upload, about);
 
         root.setTop(menubar);
+        SplitPane mod = ModPane.get(primaryStage);
+        root.setCenter(mod);
 
         Scene mainScene = new Scene(root);
         primaryStage.setScene(mainScene);
