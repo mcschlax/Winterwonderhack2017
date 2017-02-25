@@ -1,3 +1,5 @@
+package Base;
+
 public class Color {
     private static final byte WDC = (byte) 255; // white digital count
     private static final byte KDC = (byte) 0;   // black digital count
@@ -94,7 +96,7 @@ public class Color {
     public static byte[] decodeRGBGamma(int encoded) {
         byte[] split = new byte[4];
         for (int i = 0; i < 4; i++)
-            split[i] = (byte) (encoded >>> i*8);
+            split[i] = (byte) (encoded >>> i*8 & 0xFF);
         return split;
     }
 }
