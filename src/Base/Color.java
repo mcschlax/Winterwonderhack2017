@@ -1,3 +1,5 @@
+package Base;
+
 public class Color {
     private final double r;
     private final double g;
