@@ -38,6 +38,11 @@ public class Viewer extends Application {
         MenuItem export = new MenuItem("Export to image");
         menu.getItems().addAll(newFlame, loadFlame, saveFlame, export);
 
+        newFlame.setAccelerator(KeyCombination.keyCombination("Ctrl+N"));
+        loadFlame.setAccelerator(KeyCombination.keyCombination("Ctrl+O"));
+        saveFlame.setAccelerator(KeyCombination.keyCombination("Ctrl+S"));
+        export.setAccelerator(KeyCombination.keyCombination("Ctrl+E"));
+
         Menu view = new Menu("View");
 
         Menu upload = new Menu("Upload");
