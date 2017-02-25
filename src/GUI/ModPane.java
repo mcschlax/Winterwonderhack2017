@@ -1,32 +1,44 @@
 package GUI;
 
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class ModPane 
 {
-	public static SplitPane get(Stage root)
+	/**
+	 * Returns the splitplane containing left and right vboxs for each side.
+	 * @param root the primarystage, also needs the image view for the fractal.
+	 * @return the splitpane
+	 */
+	public static SplitPane get(Stage root, ImageView fractalView)
 	{
+		//TODO fuck divider panes and there weird positioning
 		SplitPane pane = new SplitPane();
 		pane.setMinSize(100, root.getHeight());
-		//pane.setBorder(new Border(new BorderStroke(Color.GRAY,BorderStrokeStyle.SOLID, CornerRadii.EMPTY,BorderWidths.DEFAULT)));
+		
 		VBox left = new VBox(20);
-
+		left.setMinWidth(100);
+		left.setPrefWidth(300);
+		left.setMaxWidth(800);
+		
 		Label title = new Label("Modification Pane");
+		title.setPadding(new Insets(20));
 		title.setFont(new Font("Arial", 20));
 
 		left.getChildren().add(title);
 
-		ImageView fractalView = new ImageView();
+		VBox right = new VBox(5);
+		right.setMinWidth(100);
 
-		pane.getItems().addAll(left, fractalView);
-		pane.setDividerPosition(0, 0.5f);
+		right.getChildren().add(fractalView);
+		
+		pane.getItems().addAll(left, right);
+		pane.setDividerPositions(0,0.2F);
 
 		return pane;
 	}
