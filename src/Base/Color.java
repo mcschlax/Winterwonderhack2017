@@ -33,7 +33,7 @@ public class Color {
     }
 
     public int encodeRGBGamma() {
-        int encoded;
+        int encoded = 0;
 
         /*
         if rgb <= .00304
