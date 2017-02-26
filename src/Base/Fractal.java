@@ -5,7 +5,7 @@ import java.util.*;
 public class Fractal {
     private static int defaultXRES = 512;
     private static int defaultYRES = 512;
-    private static long defaultITER =  10000000L;
+    private static long defaultITER =  1000000L;
     private static double defaultWeight = 0.0;
 
     private static Random random = new Random();
@@ -25,30 +25,47 @@ public class Fractal {
         Point p = points[random.nextInt(YRES)][random.nextInt(XRES)];
         Color c = new Color(random.nextDouble(), random.nextDouble(), random.nextDouble());
 
+        /* calculate total weight*/
+        double totalWeight = 0;
+        for (FractalParam fparam : FractalParam.values())
+            if (fparam.tClass() == Double.class)
+                totalWeight += (double) valid.get(fparam);
+
         for (long i = 0; i < ITER; i++) {
-            int f = random.nextInt(FractalParam.values().length - 3);
-            double weight;
-            switch (f) {
+            /* pick a random variation based on weight */
+            double ran = random.nextDouble() * totalWeight;
+            double countUp = 0;
+            int variation = 0;
+            for (FractalParam fparam : FractalParam.values())
+                if (fparam.tClass() == Double.class) {
+                    /* count up through variations until weight is topped indicating found variation*/
+                    countUp += (double) valid.get(fparam);
+                    variation++;
+                    if (countUp >= ran) {
+                        variation--;
+                        break;
+                    }
+                }
+            switch (variation) {
                 case 0:
-                    weight = (double) valid.get(FractalParam.VAR0);
-                    p = points[map( weight*(p.Y()/2.0), YRES)][map(weight*(p.X()/2.0), XRES)];
-                    p.C(Color.mix(c, FractalParam.VAR0.color()));
+                    p = points[map((p.Y()+1)/2.0, YRES)][map(p.X()/2.0, XRES)];
+                    c = Color.mix(c, FractalParam.VAR0.color());
                     break;
                 case 1:
-                    weight = (double) valid.get(FractalParam.VAR1);
-                    p = points[map(weight*((p.Y()+1)/2.0), YRES)][map(weight*(p.X()/2.0), XRES)];
-                    p.C(Color.mix(c, FractalParam.VAR1.color()));
+                    p = points[map(p.Y()/2.0, YRES)][map((p.X()+1)/2.0, XRES)];
+                    c = Color.mix(c, FractalParam.VAR1.color());
                     break;
                 case 2:
-                    weight = (double) valid.get(FractalParam.VAR2);
-                    p = points[map(weight*(p.Y()/2.0), YRES)][map(weight*((p.X() + 1)/2.0), XRES)];
-                    p.C(Color.mix(c, FractalParam.VAR2.color()));
+                    p = points[map(p.Y()/2.0, YRES)][map(p.X()/2.0, XRES)];
+                    c = Color.mix(c, FractalParam.VAR2.color());
                     break;
+                default:
+                    System.out.print(variation);
             }
 
             if (i > 20) {
                 p.incV();
-                p.C(Color.mix(p.C(), c, p.V()));
+                p.C(Color.mix(p.C(), c));
             }
         }
 
