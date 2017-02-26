@@ -115,7 +115,10 @@ public class Viewer extends Application {
             }
         }
 
-        SplitPane mod = ModPane.get(primaryStage, new ImageView(fractal));
+        //SplitPane mod = ModPane.get(primaryStage, new ImageView(fractal));
+        ModPane mpane = new ModPane(primaryStage, new ImageView(fractal));
+        SplitPane mod = mpane.get();
+
         root.setCenter(mod);
 
         Scene mainScene = new Scene(root);
