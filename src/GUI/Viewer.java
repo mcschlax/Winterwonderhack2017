@@ -11,24 +11,16 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitPane;
 import javafx.scene.image.*;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -65,13 +57,14 @@ public class Viewer extends Application {
 
         //Actions for Main Menu
         newFlame.setOnAction(e -> {
-            mpane.setFractal(generate(1080, 1920, 10000, 1,1,1));
+            mpane.setFractal(generate(1080, 1920, 100000, 1,1,1));
         });
         mpane.getRandom().setOnAction(e -> {
             mpane.newRands();
         });
         mpane.getRegen().setOnAction(e -> {
-            //mpane.setFractal(generate(800, 400, 100000, 1, 1, 1));
+            double[] d = mpane.getRands();
+            mpane.setFractal(generate(1080, 1920, 100000, d[0], d[1], d[2]));
         });
 
         quit.setOnAction(e -> {
@@ -111,7 +104,7 @@ public class Viewer extends Application {
 
     }
 
-    private WritableImage generate(int XRES, int YRES, int ITER, int VAR0, int VAR1, int VAR2) {
+    private WritableImage generate(int XRES, int YRES, int ITER, double VAR0, double VAR1, double VAR2) {
 
         WritableImage image = new WritableImage(YRES, XRES);
 
@@ -119,9 +112,9 @@ public class Viewer extends Application {
         if (XRES != 0) params.put("XRES", Integer.toString(XRES));
         if (YRES != 0) params.put("YRES", Integer.toString(YRES));
         if (ITER != 0) params.put("ITER", Integer.toString(ITER));
-        if (VAR0 != 0) params.put("VAR0", Integer.toString(VAR0));
-        if (VAR1 != 0) params.put("VAR1", Integer.toString(VAR1));
-        if (VAR2 != 0) params.put("VAR2", Integer.toString(VAR2));
+        if (VAR0 != 0) params.put("VAR0", Double.toString(VAR0));
+        if (VAR1 != 0) params.put("VAR1", Double.toString(VAR1));
+        if (VAR2 != 0) params.put("VAR2", Double.toString(VAR2));
 
         Point[][] fpoints = Fractal.createFractal(params);
         for (int r = 0; r < YRES; r++) {
@@ -179,29 +172,4 @@ public class Viewer extends Application {
 
     }
 
-    Point[][] tempPoints(int r, int c) {
-
-        Point[][] p = new Point[r][c];
-
-        for (int i = 0; i < r; i++) {
-
-            for (int j = 0; j < c; j++) {
-
-                if (j < c/3) {
-                    p[i][j] = new Point(0, 0, 0, new Base.Color(1, 1, 1));
-                }
-
-                else if (j >= c/3 && j < 2*c/3) {
-                    p[i][j] = new Point(0, 0, 0, new Base.Color(0, 0, 1));
-                }
-
-                else {
-                    p[i][j] = new Point(0, 0, 0, new Base.Color(1, 0, 0));
-                }
-
-            }
-        }
-
-        return p;
-    }
 }
