@@ -44,7 +44,7 @@ public class Viewer extends Application {
         menu.getItems().addAll(newFlame, loadFlame, saveFlame, saveAsFlame, export);
 
         newFlame.setAccelerator(KeyCombination.keyCombination("Ctrl+N"));
-        loadFlame.setAccelerator(KeyCombination.keyCombination("Ctrl+O"));
+        loadFlame.setAccelerator(KeyCombination.keyCombination("Ctrl+O"));  
         saveFlame.setAccelerator(KeyCombination.keyCombination("Ctrl+S"));
         saveAsFlame.setAccelerator(KeyCombination.keyCombination("Ctrl+Shift+S"));
         export.setAccelerator(KeyCombination.keyCombination("Ctrl+E"));
@@ -67,7 +67,7 @@ public class Viewer extends Application {
         menubar.getMenus().addAll(menu, view, upload, about);
 
         root.setTop(menubar);
-        SplitPane mod = ModPane.get(primaryStage, new ImageView()); //Temporary blank for testing
+        SplitPane mod = ModPane.get(primaryStage, new ImageView("http://4k.com/wp-content/uploads/2014/06/4k-image-santiago.jpg")); //Temporary blank for testing
         root.setCenter(mod);
 
         Scene mainScene = new Scene(root);

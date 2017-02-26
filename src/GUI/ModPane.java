@@ -2,6 +2,7 @@ package GUI;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -35,7 +36,9 @@ public class ModPane
 		VBox right = new VBox(5);
 		right.setMinWidth(100);
 
-		right.getChildren().add(fractalView);
+        ScrollPane scrollPane = new ScrollPane(fractalView);
+
+		right.getChildren().add(scrollPane);
 		
 		pane.getItems().addAll(left, right);
 		pane.setDividerPositions(0,0.2F);
