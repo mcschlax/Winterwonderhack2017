@@ -5,9 +5,10 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-       try {
-           Fractal.createFractal(parseArgs(args));
-       } catch (IllegalArgumentException ex) { System.out.print(ex.getMessage()); return; }
+        args = new String[] {"-VAR0", "1"};
+        try {
+            Fractal.createFractal(parseArgs(args));
+        } catch (IllegalArgumentException ex) { System.out.print(ex.getMessage()); return; }
     }
 
     private static Map<String, String> parseArgs(String[] args) {
@@ -16,7 +17,7 @@ public class Main {
         Map<String, String> parsedArgs = new HashMap<>();
         for (int i = 0; i < args.length; i++) {
             if (args[i].charAt(0) == '-') {
-                final String option = args[i].substring(1, args.length);
+                final String option = args[i].substring(1, args[i].length());
                 boolean validOption = true;
 
                 if (option.equals("")) {
@@ -25,12 +26,12 @@ public class Main {
                 }
 
                 if (i == args.length - 1 || args[i+1].charAt(0) == '-') {
-                    errorList.add("Invalid Option Arg " + i + ": No option defined after -");
+                    errorList.add("Invalid Option Arg " + i + ": No option defined after -" + option);
                     validOption = false;
                 }
 
                 if (validOption)
-                    parsedArgs.put(option, args[i++]);
+                    parsedArgs.put(option, args[++i]);
             }
         }
 

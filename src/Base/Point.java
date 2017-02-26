@@ -1,23 +1,24 @@
 package Base;
 
 public class Point {
-    private final double x;
     private final double y;
+    private final double x;
+
     private Color c;
     private int f;
 
-    public Point(double x, double y, int f, Color c) {
-        this.x = x;
+    public Point(double y, double x, int f, Color c) {
         this.y = y;
+        this.x = x;
         this.c = c;
         this.f = f;
     }
 
-    public Point(int x, int y) {this(x, y, 0, Color.WHT); }
-
-    public double X() { return x; }
+    public Point(double y, double x) {this(y, x, 0, new Color(1, 1, 1)); }
 
     public double Y() { return y; }
+
+    public double X() { return x; }
 
     public Color C() { return c; }
     public void C(Color c) { this.c = c; }

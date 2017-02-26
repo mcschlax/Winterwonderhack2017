@@ -4,12 +4,6 @@ public class Color {
     private static final byte WDC = (byte) 255; // white digital count
     private static final byte KDC = (byte) 0;   // black digital count
 
-    public static final Color BLK = new Color(0,0,0);
-    public static final Color RED = new Color(1, 0, 0);
-    public static final Color GRN = new Color(0, 1, 0);
-    public static final Color BLU = new Color(0, 0, 1);
-    public static final Color WHT = new Color(1, 1, 1);
-
     private final double r;
     private final double g;
     private final double b;
@@ -21,6 +15,11 @@ public class Color {
      * @param b Blue [0,1]
      */
     public Color(double r, double g, double b) {
+        if (r < 0 || r > 1) throw new IllegalArgumentException("R value " + r + " must be within range [0,1]");
+        if (g < 0 || g > 1) throw new IllegalArgumentException("G value " + g + " must be within range [0,1]");
+        if (b < 0 || b > 1) throw new IllegalArgumentException("B value " + b + " must be within range [0,1]");
+
+
         this.r = r;
         this.g = g;
         this.b = b;
@@ -45,14 +44,13 @@ public class Color {
     public double R() {
         return r;
     }
-
+    public double G() {
+        return g;
+    }
     public double B() {
         return b;
     }
 
-    public double G() {
-        return g;
-    }
 
     /**
      * Compacts color into int, encoding with gamma correction
@@ -98,5 +96,14 @@ public class Color {
         for (int i = 0; i < 4; i++)
             split[i] = (byte) (encoded >>> i*8 & 0xFF);
         return split;
+    }
+
+    public static Color mix(Color c1, Color c2) {
+        return new Color((c1.R()+c2.R())/2.0, (c1.G()+c2.G())/2.0, (c1.B()+c2.B())/2.0);
+    }
+
+    public static Color mix(Color c1, Color c2, double f) {
+        Color mixed = mix(c1, c2);
+        return new Color(mixed.R() * Math.log(f)/f, mixed.G() * Math.log(f)/f, mixed.B() * Math.log(f)/f);
     }
 }

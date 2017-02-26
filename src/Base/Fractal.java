@@ -3,59 +3,70 @@ package Base;
 import java.util.*;
 
 public class Fractal {
+    private static int defaultXRES = 512;
+    private static int defaultYRES = 512;
+    private static int defaultITER = 100000;
+    private static double defaultWeight = 0.0;
+
     private static Random random = new Random();
 
     public static Point[][] createFractal(Map<String, String> params) {
         EnumMap<FractalParam, Object> valid = validateParams(params);
 
-        int XRES = (int) valid.get(FractalParam.XRES);
         int YRES = (int) valid.get(FractalParam.YRES);
+        int XRES = (int) valid.get(FractalParam.XRES);
 
-        Point[][] points = new Point[XRES][YRES];
-        for (int x = 0; x < XRES; x++)
-            for (int y = 0; y < YRES; y++)
-                points[x][y] = new Point( (x - XRES/2)/(XRES/2),y); // scale to [-1,1)
+        Point[][] points = new Point[YRES][XRES];
+        for (int y = 0; y < YRES; y++)
+            for (int x = 0; x < XRES; x++)
+                points[y][x] = new Point((y - YRES/2.0)/(YRES/2.0),(x - XRES/2.0)/(XRES/2.0)); // scale to [-1,1)
 
         int ITER = (int) valid.get(FractalParam.ITER);
+        Point p = points[random.nextInt(YRES)][random.nextInt(XRES)];
+        Color c = new Color(random.nextDouble(), random.nextDouble(), random.nextDouble());
 
-        int ranX = random.nextInt(XRES);
-        int ranY = random.nextInt(YRES);
-
-        Point p = points[ranX][ranY];
         for (int i = 0; i < ITER; i++) {
             int f = random.nextInt(FractalParam.values().length - 3);
             double weight;
             switch (f) {
                 case 0:
                     weight = (double) valid.get(FractalParam.VAR0);
-                    p = points[map( weight*(p.X()/2),XRES)][map(weight*(p.X()/2),YRES)];
+                    p = points[map( weight*(p.Y()/2.0), YRES)][map(weight*(p.X()/2.0), XRES)];
+                    p.C(Color.mix(c, FractalParam.VAR0.color()));
                     break;
                 case 1:
                     weight = (double) valid.get(FractalParam.VAR1);
-                    p = points[map(weight*((p.X()+1)/2), XRES)][map(weight*(p.Y()/2),YRES)];
+                    p = points[map(weight*((p.Y()+1)/2.0), YRES)][map(weight*(p.X()/2.0), XRES)];
+                    p.C(Color.mix(c, FractalParam.VAR1.color()));
                     break;
                 case 2:
                     weight = (double) valid.get(FractalParam.VAR2);
-                     p = points[map(weight*(p.X()/2),XRES)][map(weight*((p.Y() + 1)/2), YRES)];
+                    p = points[map(weight*(p.Y()/2.0), YRES)][map(weight*((p.X() + 1)/2.0), XRES)];
+                    p.C(Color.mix(c, FractalParam.VAR2.color()));
                     break;
             }
 
-            if (i > 20)
+            if (i > 20) {
                 p.incV();
+                p.C(Color.mix(p.C(), c, p.V()));
+            }
         }
 
         return points;
     }
-    private static int map(double d, int max) { return (int) (d*max/2 + max/2); }
+    private static int map(double d, int max) {
+        if (d < -1 || d > 1) throw new IllegalArgumentException("D " + d + " must be within range [-1,1]");
+        return (int) (d*max/2 + max/2);
+    }
 
     private static EnumMap<FractalParam, Object> validateParams(Map<String, String> params) {
         List<String> errorList = new LinkedList<>();
 
-        EnumMap<FractalParam, Object> validated = new EnumMap<>(FractalParam.class);
+        EnumMap<FractalParam, Object> valid = new EnumMap<>(FractalParam.class);
 
         for (String option : params.keySet()) {
+            boolean found = false;
             for (FractalParam p : FractalParam.values()) {
-                boolean found = false;
                 for (String alias : p.alias())
                     if (option.equalsIgnoreCase(alias))
                         found = true;
@@ -72,8 +83,7 @@ public class Fractal {
                             throw new IllegalArgumentException("Fractal Option Type Must Be Defined Programmer Mistake!");
                         }
 
-                        validated.put(p, parse);
-
+                        valid.put(p, parse);
                     } catch (NumberFormatException ex) {
                         errorList.add("Fractal Option " + option + " Value " +
                                 params.get(option) + " Illegal Type Must Be " + p.tClass());
@@ -82,12 +92,11 @@ public class Fractal {
                     }
                     break;
                 }
-                // TODO if not found create error message
+            }
+            if (!found) {
+                errorList.add("Fractal Option " + option + " Does Not Exist");
             }
         }
-
-        //errorList.add("Fractal must have x and y resolution");
-        //errorList.add("Fractal must have number of iterations");
 
         if (!errorList.isEmpty()) {
             String error = "";
@@ -96,7 +105,19 @@ public class Fractal {
             throw new IllegalArgumentException(error);
         }
 
-        return validated;
+        /* default values if necessary */
+        if (!valid.containsKey(FractalParam.XRES))
+            valid.put(FractalParam.XRES, defaultXRES);
+        if (!valid.containsKey(FractalParam.YRES))
+            valid.put(FractalParam.YRES, defaultYRES);
+        if (!valid.containsKey(FractalParam.ITER))
+            valid.put(FractalParam.ITER, defaultITER);
+        for (FractalParam p : FractalParam.values())
+            if (!valid.containsKey(p))
+                valid.put(p, defaultWeight);
+
+
+        return valid;
     }
 
 
