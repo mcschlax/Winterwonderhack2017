@@ -2,6 +2,8 @@ package GUI; /**
  * Created by steve on 2/25/17.
  */
 
+import Base.Fractal;
+import Base.Point;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -10,7 +12,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
-import javafx.scene.image.ImageView;
+import javafx.scene.image.*;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -23,6 +25,13 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
+
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 public class Viewer extends Application {
 
@@ -41,13 +50,20 @@ public class Viewer extends Application {
         MenuItem saveFlame = new MenuItem("Save");
         MenuItem saveAsFlame = new MenuItem("Save As...");
         MenuItem export = new MenuItem("Export to image");
-        menu.getItems().addAll(newFlame, loadFlame, saveFlame, saveAsFlame, export);
+        MenuItem quit = new MenuItem("Quit");
+        menu.getItems().addAll(newFlame, loadFlame, saveFlame, saveAsFlame, export, quit);
 
+        //Key shortcuts for Main Menu
         newFlame.setAccelerator(KeyCombination.keyCombination("Ctrl+N"));
         loadFlame.setAccelerator(KeyCombination.keyCombination("Ctrl+O"));  
         saveFlame.setAccelerator(KeyCombination.keyCombination("Ctrl+S"));
         saveAsFlame.setAccelerator(KeyCombination.keyCombination("Ctrl+Shift+S"));
         export.setAccelerator(KeyCombination.keyCombination("Ctrl+E"));
+        quit.setAccelerator(KeyCombination.keyCombination("Ctrl+Q"));
+
+        quit.setOnAction(e -> {
+            System.exit(0);
+        });
 
         Menu view = new Menu("View");
 
@@ -65,9 +81,32 @@ public class Viewer extends Application {
 
         MenuBar menubar = new MenuBar();
         menubar.getMenus().addAll(menu, view, upload, about);
-
         root.setTop(menubar);
-        SplitPane mod = ModPane.get(primaryStage, new ImageView("http://4k.com/wp-content/uploads/2014/06/4k-image-santiago.jpg")); //Temporary blank for testing
+
+        //Testing
+        int x = 1080;
+        int y = 1920;
+
+        Map testVals = new HashMap<String, String>();
+        testVals.put("XRES", "1080");
+        testVals.put("YRES", "1920");
+        testVals.put("ITER", "10000");
+        testVals.put("VAR0", "1");
+        testVals.put("VAR1", "1");
+        testVals.put("VAR2", "1");
+
+        Point[][] fpoints = Fractal.createFractal(testVals);
+
+        WritableImage fractal = new WritableImage(y, x);
+        PixelWriter wr = fractal.getPixelWriter();
+
+       for (int r = 0; r < x; r++) {
+           for (int c = 0; c < y; c++) {
+               wr.setArgb(r, c, fpoints[r][c].C().encodeRGBGamma());
+           }
+       }
+
+        SplitPane mod = ModPane.get(primaryStage, new ImageView(fractal)); //Temporary image for testing
         root.setCenter(mod);
 
         Scene mainScene = new Scene(root);

@@ -36,7 +36,7 @@ public class Fractal {
                     break;
                 case 2:
                     weight = (double) valid.get(FractalParam.VAR2);
-                    p = points[map(weight*(p.X()/2),XRES)][map(weight*((p.Y() + 1)/2), YRES)];
+                     p = points[map(weight*(p.X()/2),XRES)][map(weight*((p.Y() + 1)/2), YRES)];
                     break;
             }
 
