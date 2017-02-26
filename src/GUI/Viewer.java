@@ -95,18 +95,26 @@ public class Viewer extends Application {
         testVals.put("VAR1", "1");
         testVals.put("VAR2", "1");
 
-        Point[][] fpoints = Fractal.createFractal(testVals);
+        //Point[][] fpoints = Fractal.createFractal(testVals);
 
         WritableImage fractal = new WritableImage(y, x);
         PixelWriter wr = fractal.getPixelWriter();
 
-       for (int r = 0; r < x; r++) {
-           for (int c = 0; c < y; c++) {
-               wr.setArgb(r, c, fpoints[r][c].C().encodeRGBGamma());
-           }
-       }
+        //Temp generator
+        Point[][] fpoints = tempPoints(y, x);
 
-        SplitPane mod = ModPane.get(primaryStage, new ImageView(fractal)); //Temporary image for testing
+        for (int r = 0; r < y; r++) {
+            for (int c = 0; c < x; c++) {
+                //wr.setArgb(r, c, fpoints[r][c].C().encodeRGBGamma() >>> 4);
+                double rV = fpoints[r][c].C().R();
+                double gV = fpoints[r][c].C().G();
+                double bV = fpoints[r][c].C().B();
+                Color col = new Color(rV, gV, bV, 1);
+                wr.setColor(r, c, col);
+            }
+        }
+
+        SplitPane mod = ModPane.get(primaryStage, new ImageView(fractal));
         root.setCenter(mod);
 
         Scene mainScene = new Scene(root);
@@ -156,5 +164,31 @@ public class Viewer extends Application {
 
         return dialog;
 
+    }
+
+    Point[][] tempPoints(int r, int c) {
+
+        Point[][] p = new Point[r][c];
+
+        for (int i = 0; i < r; i++) {
+
+            for (int j = 0; j < c; j++) {
+
+                if (j < c/3) {
+                    p[i][j] = new Point(0, 0, 0, new Base.Color(1, 1, 1));
+                }
+
+                else if (j >= c/3 && j < 2*c/3) {
+                    p[i][j] = new Point(0, 0, 0, new Base.Color(0, 0, 1));
+                }
+
+                else {
+                    p[i][j] = new Point(0, 0, 0, new Base.Color(1, 0, 0));
+                }
+
+            }
+        }
+
+        return p;
     }
 }
