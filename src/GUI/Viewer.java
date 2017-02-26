@@ -43,7 +43,9 @@ public class Viewer extends Application {
     public void start(Stage primaryStage) {
 
         BorderPane root = new BorderPane();
+        ModPane mpane = new ModPane(primaryStage);
 
+        //Main Menu Options
         Menu menu = new Menu("File");
         MenuItem newFlame = new MenuItem("New");
         MenuItem loadFlame = new MenuItem("Load Existing");
@@ -61,64 +63,45 @@ public class Viewer extends Application {
         export.setAccelerator(KeyCombination.keyCombination("Ctrl+E"));
         quit.setAccelerator(KeyCombination.keyCombination("Ctrl+Q"));
 
+        //Actions for Main Menu
+        newFlame.setOnAction(e -> {
+            mpane.setFractal(generate(1080, 1920, 10000, 1,1,1));
+        });
+        mpane.getRandom().setOnAction(e -> {
+            mpane.newRands();
+        });
+        mpane.getRegen().setOnAction(e -> {
+            //mpane.setFractal(generate(800, 400, 100000, 1, 1, 1));
+        });
+
         quit.setOnAction(e -> {
             System.exit(0);
         });
 
+        //View Options
         Menu view = new Menu("View");
 
+        //Upload Options
         Menu upload = new Menu("Upload");
         MenuItem uploadAWS = new MenuItem("Upload to AWS");
         upload.getItems().addAll(uploadAWS);
 
+        //About Options
         Menu about = new Menu("About");
         MenuItem aboutItem = new MenuItem("About");
+        about.getItems().addAll(aboutItem);
+
+        //Key shortcuts for About
         aboutItem.setAccelerator(KeyCombination.keyCombination("Ctrl+A"));
         aboutItem.setOnAction(e -> {
             aboutWindow(primaryStage).show();
         });
-        about.getItems().addAll(aboutItem);
 
         MenuBar menubar = new MenuBar();
         menubar.getMenus().addAll(menu, view, upload, about);
         root.setTop(menubar);
 
-        //Testing
-        int x = 1080;
-        int y = 1920;
-
-        Map testVals = new HashMap<String, String>();
-        testVals.put("XRES", "1080");
-        testVals.put("YRES", "1920");
-        testVals.put("VAR0", "1");
-        testVals.put("VAR1", "1");
-        testVals.put("VAR2", "1");
-
-        //Point[][] fpoints = Fractal.createFractal(testVals);
-
-        WritableImage fractal = new WritableImage(y, x);
-        PixelWriter wr = fractal.getPixelWriter();
-
-        //Temp generator
-        //Point[][] fpoints = tempPoints(y, x);
-        Point[][] fpoints = Fractal.createFractal(testVals);
-
-        for (int r = 0; r < y; r++) {
-            for (int c = 0; c < x; c++) {
-                //wr.setArgb(r, c, fpoints[r][c].C().encodeRGBGamma() >>> 4);
-                double rV = fpoints[r][c].C().R();
-                double gV = fpoints[r][c].C().G();
-                double bV = fpoints[r][c].C().B();
-                Color col = new Color(rV, gV, bV, 1);
-                wr.setColor(r, c, col);
-            }
-        }
-
-        //SplitPane mod = ModPane.get(primaryStage, new ImageView(fractal));
-        ModPane mpane = new ModPane(primaryStage, new ImageView(fractal));
-        SplitPane mod = mpane.get();
-
-        root.setCenter(mod);
+        root.setCenter(mpane);
 
         Scene mainScene = new Scene(root);
         primaryStage.setScene(mainScene);
@@ -128,7 +111,9 @@ public class Viewer extends Application {
 
     }
 
-    private void generate(int XRES, int YRES, int ITER, int VAR0, int VAR1, int VAR2) {
+    private WritableImage generate(int XRES, int YRES, int ITER, int VAR0, int VAR1, int VAR2) {
+
+        WritableImage image = new WritableImage(YRES, XRES);
 
         Map params = new HashMap<String, String>();
         if (XRES != 0) params.put("XRES", Integer.toString(XRES));
@@ -137,6 +122,19 @@ public class Viewer extends Application {
         if (VAR0 != 0) params.put("VAR0", Integer.toString(VAR0));
         if (VAR1 != 0) params.put("VAR1", Integer.toString(VAR1));
         if (VAR2 != 0) params.put("VAR2", Integer.toString(VAR2));
+
+        Point[][] fpoints = Fractal.createFractal(params);
+        for (int r = 0; r < YRES; r++) {
+            for (int c = 0; c < XRES; c++) {
+                double rV = fpoints[r][c].C().R();
+                double gV = fpoints[r][c].C().G();
+                double bV = fpoints[r][c].C().B();
+                Color col = new Color(rV, gV, bV, 1);
+                image.getPixelWriter().setColor(r, c, col);
+            }
+        }
+
+        return image;
 
     }
 
