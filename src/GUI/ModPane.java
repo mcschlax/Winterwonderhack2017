@@ -1,9 +1,12 @@
 package GUI;
 
+import java.util.ArrayList;
+
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
@@ -11,12 +14,28 @@ import javafx.stage.Stage;
 
 public class ModPane 
 {
+	Stage root;
+	ImageView fractalView;
+	
+	public ArrayList<TextField> textFields = new ArrayList<TextField>();
+	
+	/**
+	 * Create the modpane with stage r and the fractal image view f.
+	 * @param r stage
+	 * @param f fractal
+	 */
+	public ModPane(Stage r, ImageView f)
+	{
+		this.root = r;
+		this.fractalView = f;
+	}
+	
 	/**
 	 * Returns the splitplane containing left and right vboxs for each side.
 	 * @param root the primarystage, also needs the image view for the fractal.
 	 * @return the splitpane
 	 */
-	public static SplitPane get(Stage root, ImageView fractalView)
+	public SplitPane get()
 	{
 		//TODO fuck divider panes and there weird positioning
 		SplitPane pane = new SplitPane();
@@ -31,8 +50,27 @@ public class ModPane
 		title.setPadding(new Insets(20));
 		title.setFont(new Font("Arial", 20));
 
-		left.getChildren().add(title);
+		Label spacer = new Label("");
+		spacer.setPadding(new Insets(25));
+		spacer.setFont(new Font("Arial", 20));
+		
+		left.getChildren().addAll(title,spacer);
 
+		for(int i = 0; i < 4; i++)
+		{
+			HBox fields = new HBox();
+			
+			TextField t = new TextField();
+			t.setPadding(new Insets(5));
+			textFields.add(t);
+			
+			Label l = new Label("V" + i);
+			l.setPadding(new Insets(0, 5, 0, 0));
+			
+			fields.getChildren().addAll(l,t);
+			left.getChildren().add(fields);
+		}
+		
 		VBox right = new VBox(5);
 		right.setMinWidth(100);
 
