@@ -99,6 +99,20 @@ public class ModPane extends SplitPane
 		return this.regen;
 	}
 
+	public void newRands() {
+
+		for(TextField f : textFields)
+		{
+			Random rand = new Random();
+			f.setText(Double.toString(rand.nextDouble() * 100));
+		}
+
+	}
+
+	public int[] getRands() {
+		return null;
+	}
+
 	/**
 	 * Returns the splitplane containing left and right vboxs for each side.
 	 * @param root the primarystage, also needs the image view for the fractal.

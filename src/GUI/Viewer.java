@@ -67,6 +67,12 @@ public class Viewer extends Application {
         newFlame.setOnAction(e -> {
             mpane.setFractal(generate(1080, 1920, 10000, 1,1,1));
         });
+        mpane.getRandom().setOnAction(e -> {
+            mpane.newRands();
+        });
+        mpane.getRegen().setOnAction(e -> {
+            //mpane.setFractal(generate(800, 400, 100000, 1, 1, 1));
+        });
 
         quit.setOnAction(e -> {
             System.exit(0);
@@ -80,13 +86,16 @@ public class Viewer extends Application {
         MenuItem uploadAWS = new MenuItem("Upload to AWS");
         upload.getItems().addAll(uploadAWS);
 
+        //About Options
         Menu about = new Menu("About");
         MenuItem aboutItem = new MenuItem("About");
+        about.getItems().addAll(aboutItem);
+
+        //Key shortcuts for About
         aboutItem.setAccelerator(KeyCombination.keyCombination("Ctrl+A"));
         aboutItem.setOnAction(e -> {
             aboutWindow(primaryStage).show();
         });
-        about.getItems().addAll(aboutItem);
 
         MenuBar menubar = new MenuBar();
         menubar.getMenus().addAll(menu, view, upload, about);
