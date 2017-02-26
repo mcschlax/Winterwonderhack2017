@@ -90,7 +90,6 @@ public class Viewer extends Application {
         Map testVals = new HashMap<String, String>();
         testVals.put("XRES", "1080");
         testVals.put("YRES", "1920");
-        testVals.put("ITER", "10000");
         testVals.put("VAR0", "1");
         testVals.put("VAR1", "1");
         testVals.put("VAR2", "1");

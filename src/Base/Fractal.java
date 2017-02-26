@@ -5,7 +5,7 @@ import java.util.*;
 public class Fractal {
     private static int defaultXRES = 512;
     private static int defaultYRES = 512;
-    private static int defaultITER = 100000;
+    private static long defaultITER =  10000000L;
     private static double defaultWeight = 0.0;
 
     private static Random random = new Random();
@@ -21,11 +21,11 @@ public class Fractal {
             for (int x = 0; x < XRES; x++)
                 points[y][x] = new Point((y - YRES/2.0)/(YRES/2.0),(x - XRES/2.0)/(XRES/2.0)); // scale to [-1,1)
 
-        int ITER = (int) valid.get(FractalParam.ITER);
+        long ITER = (long) valid.get(FractalParam.ITER);
         Point p = points[random.nextInt(YRES)][random.nextInt(XRES)];
         Color c = new Color(random.nextDouble(), random.nextDouble(), random.nextDouble());
 
-        for (int i = 0; i < ITER; i++) {
+        for (long i = 0; i < ITER; i++) {
             int f = random.nextInt(FractalParam.values().length - 3);
             double weight;
             switch (f) {
@@ -79,6 +79,8 @@ public class Fractal {
                             parse = Integer.parseInt(params.get(option));
                         } else if (p.tClass() == Double.class) {
                             parse = Double.parseDouble(params.get(option));
+                        } else if (p.tClass() == Long.class) {
+                            parse = Long.parseLong(params.get(option));
                         } else {
                             throw new IllegalArgumentException("Fractal Option Type Must Be Defined Programmer Mistake!");
                         }
