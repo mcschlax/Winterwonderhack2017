@@ -101,7 +101,8 @@ public class Viewer extends Application {
         PixelWriter wr = fractal.getPixelWriter();
 
         //Temp generator
-        Point[][] fpoints = tempPoints(y, x);
+        //Point[][] fpoints = tempPoints(y, x);
+        Point[][] fpoints = Fractal.createFractal(testVals);
 
         for (int r = 0; r < y; r++) {
             for (int c = 0; c < x; c++) {
@@ -122,6 +123,18 @@ public class Viewer extends Application {
         primaryStage.setTitle("Flam3 Fractals");
         primaryStage.setMaximized(true);
         primaryStage.show();
+
+    }
+
+    private void generate(int XRES, int YRES, int ITER, int VAR0, int VAR1, int VAR2) {
+
+        Map params = new HashMap<String, String>();
+        if (XRES != 0) params.put("XRES", Integer.toString(XRES));
+        if (YRES != 0) params.put("YRES", Integer.toString(YRES));
+        if (ITER != 0) params.put("ITER", Integer.toString(ITER));
+        if (VAR0 != 0) params.put("VAR0", Integer.toString(VAR0));
+        if (VAR1 != 0) params.put("VAR1", Integer.toString(VAR1));
+        if (VAR2 != 0) params.put("VAR2", Integer.toString(VAR2));
 
     }
 
